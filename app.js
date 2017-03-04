@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
@@ -17,25 +18,28 @@ db.on('error', function(err){
 // logger
 app.use(morgan('dev'));
 
-// parse application/x-www-form-urlencoded
+// parse body for application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// parse application/json
+// parse body for json
 app.use(bodyParser.json())
 
-// routes
-app.use(router);
+// parse cookie
+app.use(cookieParser());
 
 //CHANGE
 
 
 
 // serve static files
-app.use('/frontend', express.static('../allotment/public'));
+app.use('/frontend', express.static('../Alloc/public'));
 
 
 
 // CHANGE
+
+// routes
+app.use(router);
 
 // 404 generator
 app.use(function(req, res, next){
