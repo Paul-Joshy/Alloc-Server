@@ -6,53 +6,63 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const {User} = require("../models.js");
 
 router.post('/register', function(req, res, next){
+    /* check if all fields were filled */
     if(req.body && req.body.userName && req.body.password && req.body.confirmPassword){
+        /* check if password was correctly repeated twice */
         if(req.body.password === req.body.confirmPassword){
-            var hash = bcrypt.hashSync(req.body.password);
-            User.create({
+            /* create new user with req values */
+            let user = new User({
                 userName: req.body.userName,
-                password: hash
+                password: req.body.password
             });
-            res.status(200);
-            return res.send("New user created");
+
+            user.save( function(err){
+                if(err) return next(err);
+                res.status(200);
+                return res.send("New user registered");
+            })
+
         } else {
             let err = new Error("Passwords don't match");
             err.stat = 400;
             return next(err);
         }
     } else {
-        let err = new Error("Fields cannot be empty")
+        let err = new Error("Fields cannot be empty");
         err.stat = 400;
         return next(err);
     }
 });
 
 router.post('/login', function(req, res, next){
+    /* check if all fields were filled */
     if(req.body && req.body.userName && req.body.password){
-        User.findOne({userName: req.body.userName}, {password: true}, function(err, user){
-            if(err){
-                return next(err);
-            } else {
-                if(user){
-                    if (bcrypt.compareSync(req.body.password, user.password)){
-                        // if user is found and password is right
-                        // create a token
-                        let token = jwt.sign(user, "super-secret-key", {
-                            expiresIn: 60*60 // expires in 1 hour
-                        });
-
-                        res.cookie("token", token);
-                        res.send("token sent")
-                    } else {
-                        let err = new Error("Wrong!!");
-                        err.stat = 400;
-                        return next(err);
-                    }
+        User.findOne({userName: req.body.userName}, {userName:true, password: true}, function(err, user){
+            if(err) return next(err);
+            if(user){
+                if (bcrypt.compareSync(req.body.password, user.password)){
+                    /* if user is found and password is right */
+                    /* create a token */
+                    let token = jwt.sign(user, "super-secret-key", {
+                        expiresIn: 60*60 // expires in 1 hour
+                    });
+                    res.cookie("token", token);
+                    res.cookie("userName", user.userName);
+                    res.cookie("_id", user._id);
+                    res.status(200);
+                    res.json({
+                        _id: user._id,
+                        userName: user.userName
+                    });
                 } else {
-                    let err = new Error("User doesn't exist");
+                    let err = new Error("Wrong password");
                     err.stat = 400;
                     return next(err);
                 }
+            } else {
+                let err = new Error("User doesn't exist");
+                err.stat = 400;
+                return next(err);
             }
         })
     } else {
