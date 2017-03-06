@@ -6,29 +6,27 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const {User} = require("../models.js");
 
 router.post('/register', function(req, res, next){
-    /* check if all fields were filled */
-    if(req.body && req.body.userName && req.body.password && req.body.confirmPassword){
-        /* check if password was correctly repeated twice */
-        if(req.body.password === req.body.confirmPassword){
-            /* create new user with req values */
-            let user = new User({
-                userName: req.body.userName,
-                password: req.body.password
-            });
+    /* check if password was correctly repeated twice */
+    if(req.body.password === req.body.confirmPassword){
+        /* create new user with req values */
+        let user = new User({
+            userName: req.body.userName,
+            password: req.body.password
+        });
 
-            user.save( function(err){
-                if(err) return next(err);
-                res.status(200);
-                return res.send("New user registered");
-            })
+        user.save( function(err){
+            if(err) return next(err);
+            res.status(200);
+            return res.send("New user registered");
+        })
 
-        } else {
-            let err = new Error("Passwords don't match");
-            err.stat = 400;
-            return next(err);
-        }
     } else {
-        let err = new Error("Fields cannot be empty");
+        let err = {}
+        err.errors = {
+            confirmPassword: {
+                message: "Passwords don't match"
+            }
+        }
         err.stat = 400;
         return next(err);
     }

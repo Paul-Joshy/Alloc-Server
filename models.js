@@ -26,7 +26,7 @@ const userSchema = new Schema({
               if(v.length>8) return true;
               return false;
           },
-          message: 'Username needs to be longer than eight characters'
+          message: 'Password needs to be longer than eight characters'
         }
     }
 })
