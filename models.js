@@ -52,8 +52,19 @@ const blockSchema = new Schema({
         type: String,
         trim: true,
         unique: true,
-        required: true
+        required: true,
+        validate: {
+          validator: function(v) {
+              if(v.length <= 3) return true;
+              return false;
+          },
+          message: "Tag name shouldn't be more than 3 characters"
+        }
     }
+});
+
+blockSchema.pre("save", function(next){
+    next();
 });
 
 module.exports.Block = mongoose.model('blocks', blockSchema);
