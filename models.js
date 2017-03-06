@@ -39,6 +39,16 @@ userSchema.pre("save", function(next){
 
 module.exports.User = mongoose.model('users', userSchema);
 
+/* Floors */
+
+const floorSchema = new Schema({
+    num: {
+        type: Number,
+        unique: true,
+        required: true
+    }
+});
+
 /* Blocks */
 
 const blockSchema = new Schema({
@@ -60,7 +70,8 @@ const blockSchema = new Schema({
           },
           message: "Tag name shouldn't be more than 3 characters"
         }
-    }
+    },
+    floors: [floorSchema]
 });
 
 blockSchema.pre("save", function(next){
