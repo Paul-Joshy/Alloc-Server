@@ -7,7 +7,7 @@ const loginRouter = require('./login.js');
 
 const authenticate = function(req, res, next) {
     // check query for token
-    var token = req.cookies.token
+    var token = req.cookies.token || req.headers.token
     // decode token
     if (token) {
         // verifies secret and checks exp

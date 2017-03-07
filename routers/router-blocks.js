@@ -1,7 +1,23 @@
+const _ = require('underscore');
 const express = require('express');
 const router = express.Router();
 
 const {Block} = require('../models.js');
+
+// if blockID exists in route
+router.param('blockID', function(req, res, next, blockID){
+    Block.findById(blockID, function(err, block){
+        if(err) return next(err);
+        if(block){
+            req.block = block;
+            next();
+        } else {
+            let err = new Error("block not found");
+            err.stat = 404;
+            return next(err);
+        }
+    })
+});
 
 // get blocks
 router.get('/blocks', function(req, res, next){
@@ -27,29 +43,64 @@ router.post('/blocks', function(req, res, next){
 });
 
 // get one block
-router.get('/blocks/:id', function(req, res, next){
-    block_id = req.params.id;
-    Block.findOne({_id: block_id}, function(err, block){
-        if(err) return next(err);
-        if(block){
-            res.status(200);
-            return res.json(block);
-        } else {
-            let err = new Error("block not found");
-            err.stat = 404;
-            return next(err);
-        }
-    })
+router.get('/blocks/:blockID', function(req, res, next){
+    res.status(200);
+    res.json(req.block);
 })
 
 // remove one block
-router.delete('/blocks/:id', function(req, res, next){
-    block_id = req.params.id;
-    Block.remove({_id: block_id}, function(err){
+router.delete('/blocks/:blockID', function(req, res, next){
+    Block.remove({_id: req.block._id}, function(err){
         if(err) return next(err);
         res.status(200);
-        res.send(block_id);
+        res.send(req.block._id);
     })
 })
+
+/************************
+        Floors
+************************/
+
+router.param('floorID', function(req, res, next, floorID){
+    req.floor = req.block.floors.id(floorID);
+    next();
+})
+
+// get all floors
+router.get('/blocks/:blockID/floors', function(req, res, next){
+    res.status(200);
+    res.json(req.block.floors);
+});
+
+// create a floor
+router.post('/blocks/:blockID/floors', function(req, res, next){
+    req.block.floors.push({
+        number: req.body.number
+    });
+    req.block.save( function(err, block) {
+        if(err) return next(err);
+        res.status(200);
+        res.json(block);
+    });
+});
+
+// get a floor
+router.get('/blocks/:blockID/floors/:floorID', function(req, res, next){
+    res.status(200);
+    res.json(req.floor);
+});
+
+// delete a floor
+router.delete('/blocks/:blockID/floors/:floorID', function(req, res, next){
+    req.block.floors = _.reject(req.block.floors, function(floor){
+        return floor._id === req.floor._id;
+    });
+
+    req.block.save( function(err, block) {
+        if(err) return next(err);
+        res.status(200);
+        res.json(block);
+    });
+});
 
 module.exports = router;
