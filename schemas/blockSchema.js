@@ -5,7 +5,6 @@ const floorSchema = new Schema({
     number: {
         type: Number,
         required: true,
-        unique: true,
         validate: {
             validator: function(v) {
                 if(v <= 10) return true;
