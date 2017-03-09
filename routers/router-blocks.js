@@ -74,27 +74,25 @@ router.get('/blocks/:blockID/floors', function(req, res, next){
 
 // create a floor
 router.post('/blocks/:blockID/floors', function(req, res, next){
-    Block.findOne( {_id: req.block._id, floors: { $elemMatch: { number: req.body.number } } }, function(err, floor){
-        if(floor){
-            let err = new Error("Floor already exists");
-            err.errors = {
-                number: {
-                    message: "Floor already exists",
-                    path: "number"
-                }
-            }
-            next(err);
-        } else {
-            req.block.floors.push({
-                number: req.body.number
-            });
-            req.block.save( function(err, block) {
-                if(err) return next(err);
-                res.status(200);
-                res.json(block);
-            });
-        }
-    });
+	if( _.find(req.block.floors, function(floor){ return floor.number === parseInt(req.body.number); }) ) {
+		let err = new Error("Floor already exists");
+		err.errors = {
+			number: {
+				message: "Floor already exists",
+				path: "number"
+			}
+		};
+		next(err);
+	} else {
+		req.block.floors.push({
+			number: req.body.number
+		});
+		req.block.save( function(err, block) {
+			if(err) return next(err);
+			res.status(200);
+			res.json(block);
+		});
+	}
 });
 
 // get a floor
