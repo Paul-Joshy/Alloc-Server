@@ -42,7 +42,7 @@ router.post('/login', function(req, res, next){
                     /* if user is found and password is right */
                     /* create a token */
                     let token = jwt.sign(user, "super-secret-key", {
-                        expiresIn: 60*60 // expires in 1 hour
+                        expiresIn: 60*60*24 // expires in 1 day
                     });
                     res.cookie("token", token);
                     res.cookie("userName", user.userName);
