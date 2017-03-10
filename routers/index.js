@@ -2,8 +2,11 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 let router = express.Router();
 
-const prereqsRouter = require('./router-prereqs.js');
+/* all routes before authentication */
 const loginRouter = require('./login.js');
+/* all routes after authentication */
+const prereqsRouter = require('./router-prereqs.js');
+const combinationsRouter = require('./router-combinations.js');
 
 const authenticate = function(req, res, next) {
     // check query for token
@@ -27,6 +30,6 @@ const authenticate = function(req, res, next) {
 	}
 };
 
-router.use(loginRouter, authenticate, prereqsRouter);
+router.use(loginRouter, authenticate, prereqsRouter, combinationsRouter);
 
 module.exports = router;
