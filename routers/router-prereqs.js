@@ -6,40 +6,40 @@ const {Block, Room} = require('../models.js');
 
 // if blockID exists in route
 router.param('blockID', function(req, res, next, blockID){
-    Block.findById(blockID, function(err, block){
-        if(err) return next(err);
-        if(block){
-            req.block = block;
-            next();
-        } else {
-            let err = new Error("block not found");
-            err.stat = 404;
-            return next(err);
-        }
-    })
+	Block.findById(blockID, function(err, block){
+		if(err) return next(err);
+		if(block){
+			req.block = block;
+			next();
+		} else {
+			let err = new Error("block not found");
+			err.stat = 404;
+			return next(err);
+		}
+	});
 });
 
 // get blocks
 router.get('/blocks', function(req, res, next){
-    Block.find({}, '', function (err, blocks) {
-        if(err) return next(err);
-        res.status(200);
-        res.json(blocks);
-    })
+	Block.find({}, '', function (err, blocks) {
+		if(err) return next(err);
+		res.status(200);
+		res.json(blocks);
+	});
 });
 
 // post new block
 router.post('/blocks', function(req, res, next){
-    let block = new Block({
-        blockName: req.body.blockName,
-        tag: req.body.tag
-    });
+	let block = new Block({
+		blockName: req.body.blockName,
+		tag: req.body.tag
+	});
 
-    block.save( function(err, block) {
-        if(err) return next(err);
-        res.status(200);
-        res.json(block);
-    });
+	block.save( function(err, block) {
+		if(err) return next(err);
+		res.status(200);
+		res.json(block);
+	});
 });
 
 // get one block
@@ -65,14 +65,14 @@ router.delete('/blocks/:blockID', function(req, res, next){
 ************************/
 
 router.param('floorID', function(req, res, next, floorID){
-    req.floor = req.block.floors.id(floorID);
-    next();
-})
+	req.floor = req.block.floors.id(floorID);
+	next();
+});
 
 // get all floors
 router.get('/blocks/:blockID/floors', function(req, res, next){
-    res.status(200);
-    res.json(req.block.floors);
+	res.status(200);
+	res.json(req.block.floors);
 });
 
 // create a floor
