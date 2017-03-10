@@ -171,7 +171,7 @@ router.post('/blocks/:blockID/floors/:floorID/rooms', function(req, res, next){
 		// save block
 		req.block.save();
 		res.status(200);
-		res.json(req.block);
+		res.json(room);
 	});
 });
 
