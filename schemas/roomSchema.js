@@ -12,7 +12,6 @@ const roomSchema = new Schema({
 	},
 	number: {
 		type: Number,
-		unique: true,
 		required: true
 	},
 	benches: {
