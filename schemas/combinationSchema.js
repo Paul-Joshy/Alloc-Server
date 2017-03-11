@@ -2,6 +2,27 @@ const _ = require('underscore');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const batchSchema = new Schema({
+	year: {
+		type: Number,
+		required: true
+	},
+	prefix: {
+		type: String,
+		required: true
+	},
+	strength: {
+		type: Number,
+		required: true
+	},
+	exclusions: [
+		{
+			type: Number,
+			required: true
+		}
+	]
+});
+
 const CombinationSchema = new Schema({
 	name: {
 		type: String,
@@ -26,7 +47,8 @@ const CombinationSchema = new Schema({
 	conflicts: [{ 
 		type : mongoose.Schema.Types.ObjectId, 
 		ref: 'combinations'
-	}]
+	}],
+	batches: [batchSchema]
 });
 
 CombinationSchema.pre("save", function(next){
