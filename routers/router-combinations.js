@@ -5,7 +5,7 @@ const {Combination} = require('../models.js');
 
 /* read all combinations */
 Router.get('/combinations', function(req, res, next){
-	Combination.find({}, function(err, combis){
+	Combination.find({}).populate('conflicts').exec( function(err, combis){
 		if(err) return next(err);
 		res.status(200);
 		return res.json(combis);
