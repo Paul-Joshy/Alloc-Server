@@ -5,7 +5,7 @@ const {Combination} = require('../models.js');
 
 /* read all combinations */
 Router.get('/combinations', function(req, res, next){
-	Combination.find({}).populate('conflicts').sort( { _id : -1 } ).exec( function(err, combis){
+	Combination.find({}).populate('conflicts').sort( { _id : 1 } ).exec( function(err, combis){
 		if(err) return next(err);
 		res.status(200);
 		return res.json(combis);
@@ -24,7 +24,7 @@ Router.put("/combinations", function(req, res, next){
 			if(err) return next(err);
 			Combination.findByIdAndUpdate(other._id, { $push: { conflicts: current._id } }, function(err){
 				if(err) return next(err);
-				Combination.find({}).populate('conflicts').sort( { _id : -1 } ).exec( function(err, combis){
+				Combination.find({}).populate('conflicts').sort( { _id : 1 } ).exec( function(err, combis){
 					if(err) return next(err);
 					res.status(200);
 					return res.json(combis);
