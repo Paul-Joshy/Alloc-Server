@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const express = require('express');
 const Router = new express.Router;
 
@@ -120,6 +121,47 @@ Router.delete("/combinations/:combiID", function(req, res, next){
 			});
 		});
 	});
+});
+
+/*****************************************************************************************************************
+
+	Routes for batches
+
+*****************************************************************************************************************/
+
+/* route to create a batch */
+Router.post('/combinations/:combiID/batches', function(req, res, next){
+	/* in existing batches array find if new batch is a duplicate */
+	if( _.find(req.combi.batches, function(batch){ return batch.year === parseInt(req.body.year); }) ){
+		return next(new Error("year already exists for another batch"));
+	} else if ( _.find(req.combi.batches, function(batch){ return batch.prefix === req.body.prefix.toUpperCase(); }) ){
+		return next(new Error("prefix already exists for another batch"));
+	}
+
+	req.combi.batches.push({
+		year: req.body.year,
+		prefix: req.body.prefix,
+		strength: req.body.strength,
+		exclusions: req.body.exclusions
+	});
+
+	req.combi.save( function(err){
+		if(err) return next(err);
+		res.json(req.combi);
+	});
+});
+
+
+/* route to create a batch */
+Router.put('/combinations/:combiID/batches', function(req, res, next){
+	_.extend(_.findWhere(req.combi.batches, { year: req.body.year }), {
+		year: req.body.year,
+		prefix: req.body.prefix,
+		strength: req.body.strength,
+		exclusions: req.body.exclusions
+	});
+
+	req.combi.save();
 });
 
 module.exports = Router;

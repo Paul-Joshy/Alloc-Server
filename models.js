@@ -7,3 +7,5 @@ module.exports.Room = mongoose.model('rooms', require('./schemas/roomSchema.js')
 module.exports.Block = mongoose.model('blocks', require('./schemas/blockSchema.js'));
 /* Combination */
 module.exports.Combination = mongoose.model('combinations', require('./schemas/combinationSchema.js'));
+/* Sessions */
+module.exports.Session = mongoose.model('sessions', require('./schemas/sessionSchema.js'));

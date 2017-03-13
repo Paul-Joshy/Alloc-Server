@@ -9,11 +9,13 @@ const batchSchema = new Schema({
 	},
 	prefix: {
 		type: String,
-		required: true
+		required: true,
+		uppercase: true
 	},
 	strength: {
 		type: Number,
-		required: true
+		required: true,
+		min: 1
 	},
 	exclusions: [
 		{
@@ -21,6 +23,14 @@ const batchSchema = new Schema({
 			required: true
 		}
 	]
+});
+
+batchSchema.pre("save", function(next){
+	/* year should fall within duration */
+	if(this.year > this.parent().duration){
+		next(new Error("batch should fall within combination duration"));
+	}
+	next();
 });
 
 const CombinationSchema = new Schema({
@@ -52,10 +62,13 @@ const CombinationSchema = new Schema({
 });
 
 CombinationSchema.pre("save", function(next){
-	// remove any duplicates
+	// remove any duplicate conflicts
 	this.conflicts = _.uniq(this.conflicts, function(conflict){ return conflict.toString(); });
-	// check if combi is conflicting with self and remove
+	// remove self conflict in conflicts
 	this.conflicts = _.reject(this.conflicts, (conflict)=>{ return this._id.toString() === conflict.toString(); });
+	/* number of batches cannot exceed duration years */
+	if(this.batches.length > this.duration)
+		next(new Error("Number of batches cannot exceed duration years"));
 	next();
 });
 

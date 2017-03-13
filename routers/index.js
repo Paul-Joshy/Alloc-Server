@@ -7,6 +7,7 @@ const loginRouter = require('./login.js');
 /* all routes after authentication */
 const prereqsRouter = require('./router-prereqs.js');
 const combinationsRouter = require('./router-combinations.js');
+const sessionsRouter = require('./router-sessions.js');
 
 const authenticate = function(req, res, next) {
     // check query for token
@@ -30,6 +31,6 @@ const authenticate = function(req, res, next) {
 	}
 };
 
-router.use(loginRouter, authenticate, prereqsRouter, combinationsRouter);
+router.use(loginRouter, authenticate, prereqsRouter, combinationsRouter, sessionsRouter);
 
 module.exports = router;
