@@ -31,4 +31,18 @@ const sessionSchema = new Schema({
 	}
 });
 
+sessionSchema.pre('save', function(next){
+	let start  = this.start.split(':');
+	let end = this.end.split(':');
+
+	start = parseInt(start.join(''));
+	end = parseInt(end.join(''));
+
+	if(start>end){
+		next(new Error("start time cannot exceed end time"));
+	}
+
+	next();
+});
+
 module.exports = sessionSchema;
