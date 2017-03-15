@@ -38,7 +38,12 @@ const sessionSchema = new Schema({
 			type: mongoose.SchemaTypes.ObjectId,
 			ref: 'combinations.batches'
 		}
-	}]
+	}],
+	allotedStrength: {
+		type: Number,
+		default: 0,
+		min: 0
+	}
 });
 
 sessionSchema.pre('save', function(next){

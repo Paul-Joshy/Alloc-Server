@@ -16,7 +16,8 @@ Router.param("sessionID", function(req, res, next, sessionID){
 Router.post("/sessions/:sessionID/combinations", function(req, res, next){
 	const combi_ID = req.body.combi_ID;
 	const batch_ID = req.body.batch_ID;
-
+	const batchStrength = parseInt(req.body.batchStrength);
+	req.session.allotedStrength += batchStrength;
 	req.session.batches.push({
 		combination: combi_ID,
 		batch: batch_ID
@@ -32,7 +33,8 @@ Router.post("/sessions/:sessionID/combinations", function(req, res, next){
 Router.put("/sessions/:sessionID/combinations", function(req, res, next){
 	const combi_ID = req.body.combi_ID;
 	const batch_ID = req.body.batch_ID;
-	console.log();
+	const batchStrength = parseInt(req.body.batchStrength);
+	req.session.allotedStrength -= batchStrength;
 	req.session.batches = _.reject(req.session.batches, function(batchInSession){
 		return batchInSession.combination.toString() === combi_ID.toString() && batchInSession.batch.toString() === batch_ID.toString();
 	});
