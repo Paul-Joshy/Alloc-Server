@@ -28,7 +28,17 @@ const sessionSchema = new Schema({
 				return /^\d{2}:\d{2}$/.test(v);
 			}
 		}
-	}
+	},
+	batches: [{
+		combination: {
+			type: mongoose.SchemaTypes.ObjectId,
+			ref: 'combinations'
+		},
+		batch: {
+			type: mongoose.SchemaTypes.ObjectId,
+			ref: 'combinations.batches'
+		}
+	}]
 });
 
 sessionSchema.pre('save', function(next){

@@ -9,7 +9,8 @@ const router = require('./routers/index.js');
 const app = express();
 const PORT = 3000 || process.env.PORT;
 
-mongoose.connect(`mongodb://JSDevL:arfathandypaul1234@ds113630.mlab.com:13630/alloc-db`);
+//mongoose.connect(`mongodb://JSDevL:arfathandypaul1234@ds113630.mlab.com:13630/alloc-db`);
+mongoose.connect('mongodb://localhost/alloc-db');
 const db = mongoose.connection;
 db.on('error', function(err){
 	console.log(err);

@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const batchSchema = new Schema({
 	year: {
 		type: Number,
+		min:1,
 		required: true
 	},
 	prefix: {
@@ -39,7 +40,7 @@ const CombinationSchema = new Schema({
 		unique: true,
 		required: true,
 		trim: true,
-		maxlength: [6, "Combination name cannot exceed 6 characters"]
+		maxlength: [10, "Combination name cannot exceed 6 characters"]
 	},
 	gradLevel: {
 		type: String,

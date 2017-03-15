@@ -5,7 +5,7 @@ const Router = new express.Router();
 const {Session} = require('../models.js');
 
 Router.param("sessionID", function(req, res, next, sessionID){
-	Session.findById(sessionID, function(err, session){
+	Session.findById(sessionID).exec(function(err, session){
 		if(err) return next(err);
 		req.session = session;
 		next();
@@ -14,7 +14,8 @@ Router.param("sessionID", function(req, res, next, sessionID){
 
 /* get all sessions */
 Router.get('/sessions', function(req, res, next){
-	Session.find({}, function(err, sessions){
+	//.populate("batches.combination")
+	Session.find({}).exec(function(err, sessions){
 		if(err) return next(err);
 		res.status(200);
 		res.json(sessions);
