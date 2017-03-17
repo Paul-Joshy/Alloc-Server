@@ -73,4 +73,5 @@ CombinationSchema.pre("save", function(next){
 	next();
 });
 
+module.exports.batchSchema = batchSchema;
 module.exports = CombinationSchema;

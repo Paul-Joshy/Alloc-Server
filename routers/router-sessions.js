@@ -15,7 +15,7 @@ Router.param("sessionID", function(req, res, next, sessionID){
 /* get all sessions */
 Router.get('/sessions', function(req, res, next){
 	//.populate("batches.combination")
-	Session.find({}).exec(function(err, sessions){
+	Session.find({}, function(err, sessions){
 		if(err) return next(err);
 		res.status(200);
 		res.json(sessions);
