@@ -6,8 +6,8 @@ const userSchema = new Schema({
 	userName: {
 		type: String,
 		trim: true,
-		required: true,
-		unique: true,
+		required: [true, "Username is required"],
+		unique: [true, "Username already exists"],
 		validate: {
 			validator: function(v) {
 				if(v.length>2) return true;
@@ -18,7 +18,7 @@ const userSchema = new Schema({
 	},
 	password: {
 		type: String,
-		required: true,
+		required: [true, "Password is required"],
 		validate: {
 			validator: function(v) {
 				if(v.length>8) return true;
