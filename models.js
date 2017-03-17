@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 /* Registration, Login */
 module.exports.User = mongoose.model('users', require('./schemas/userSchema.js'));
+/* Routing validation */
+module.exports.Section = mongoose.model('section', require('./schemas/sectionsSchema.js'));
 /* Room */
 module.exports.Room = mongoose.model('rooms', require('./schemas/roomSchema.js'));
 /* Block, Floor */

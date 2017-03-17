@@ -59,6 +59,11 @@ const CombinationSchema = new Schema({
 		type : mongoose.Schema.Types.ObjectId, 
 		ref: 'combinations'
 	}],
+	completed: {
+		type: Boolean,
+		required: true,
+		default: false
+	},
 	batches: [batchSchema]
 });
 

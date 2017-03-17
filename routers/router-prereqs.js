@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const {Block, Room} = require('../models.js');
+const {Section} = require('../models.js');
 
 // if blockID exists in route
 router.param('blockID', function(req, res, next, blockID){
@@ -46,6 +47,14 @@ router.post('/blocks', function(req, res, next){
 router.get('/blocks/:blockID', function(req, res, next){
 	res.status(200);
 	res.json(req.block);
+});
+
+//update a block
+router.put('blocks/:blockID', function(req, res, next){
+	console.log("Im here");
+	Block.findByIdAndUpdate(blockID, { completed: true }, function(err){
+		if(err) return next(err);
+	})
 });
 
 // remove one block
@@ -193,7 +202,7 @@ router.delete('/blocks/:blockID/floors/:floorID/rooms/:roomID', function(req, re
 		});
 		req.block.save();
 		res.status(200);
-		res.json(req.block);
+		res.json(req.room);
 	});
 });
 

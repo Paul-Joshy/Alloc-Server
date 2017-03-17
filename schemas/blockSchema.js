@@ -39,6 +39,11 @@ const blockSchema = new Schema({
 			message: "Tag name shouldn't be more than 3 characters"
 		}
 	},
+	completed: {
+		type: Boolean,
+		required: true,
+		default: false
+	},
 	floors: [floorSchema]
 });
 

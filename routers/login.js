@@ -17,9 +17,9 @@ router.post('/register', function(req, res, next){
         user.save( function(err){
             if(err) return next(err);
             res.status(200);
-            return res.send("New user registered");
-        })
-
+			return res.send("New user registered");
+        });
+		
     } else {
         let err = {}
         err.errors = {
