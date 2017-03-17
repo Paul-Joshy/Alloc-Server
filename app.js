@@ -41,7 +41,7 @@ app.use(cookieParser());
 app.use('/app', express.static('../Alloc/public'));
 
 // redirect to app root on URI root
-router.use(function(req, res, next){
+app.use(function(req, res, next){
 	if(req.url == "/" && req.method.toUpperCase() == "GET")
 		res.redirect('/app');
 	else
