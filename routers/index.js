@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-let router = express.Router();
+const router = express.Router();
 
 /* all routes before authentication */
 const loginRouter = require('./login.js');
@@ -8,7 +8,12 @@ const loginRouter = require('./login.js');
 const prereqsRouter = require('./router-prereqs.js');
 const combinationsRouter = require('./router-combinations.js');
 const sessionsRouter = require('./router-sessions.js');
-const combinationsToSessions = require('./router-combinations-to-sessions');
+const combinationsToSessionsRouter = require('./router-combinations-to-sessions');
+const allocRouter = require('./router-alloc');
+/* redirect root URI to app root */
+const indexRedirect = router.get('/', function(req, res, next){
+	res.redirect('/app');
+});
 
 const authenticate = function(req, res, next) {
     // check query for token
@@ -32,6 +37,6 @@ const authenticate = function(req, res, next) {
 	}
 };
 
-router.use(loginRouter, authenticate, prereqsRouter, combinationsRouter, sessionsRouter, combinationsToSessions);
+router.use(indexRedirect, loginRouter, authenticate, prereqsRouter, combinationsRouter, sessionsRouter, combinationsToSessionsRouter, allocRouter);
 
 module.exports = router;
