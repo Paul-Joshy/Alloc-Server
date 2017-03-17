@@ -9,11 +9,20 @@ const router = require('./routers/index.js');
 const app = express();
 const PORT = 3000 || process.env.PORT;
 
+// flag to check if mongoDB connection has been established or not
+app.set('isMongoUP', true);
+
 //mongoose.connect(`mongodb://JSDevL:arfathandypaul1234@ds113630.mlab.com:13630/alloc-db`);
 mongoose.connect('mongodb://localhost/alloc-db');
 const db = mongoose.connection;
 db.on('error', function(err){
-	console.log(err);
+	app.set('isMongoUP', false);
+});
+
+app.use(function(req, res, next){
+	if(app.get('isMongoUP') === false)
+		res.send("mongo down");
+	next();
 });
 
 // logger
@@ -28,16 +37,16 @@ app.use(bodyParser.json());
 // parse cookie
 app.use(cookieParser());
 
-//CHANGE
-
-
-
 // serve static files
-app.use('/frontend', express.static('../Alloc/public'));
+app.use('/app', express.static('../Alloc/public'));
 
-
-
-// CHANGE
+// redirect to app root on URI root
+router.use(function(req, res, next){
+	if(req.url == "/" && req.method.toUpperCase() == "GET")
+		res.redirect('/app');
+	else
+		next();
+});
 
 // routes
 app.use(router);
